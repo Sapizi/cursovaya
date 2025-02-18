@@ -1,0 +1,13 @@
+.header{
+    background-color: #E97C00;
+    width: 1920px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+}
+.title{
+    color: #fff;
+    font-size: 64px;
+    font-weight: 500;
+    margin-left: 62px;
+}
