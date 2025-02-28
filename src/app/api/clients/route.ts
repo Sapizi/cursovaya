@@ -3,10 +3,10 @@ import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const count = await prisma.client.count();
-    return NextResponse.json({ count });
+    const clients = await prisma.client.findMany();
+    return NextResponse.json({ count: clients.length, clients }); // Возвращаем количество и список клиентов
   } catch (error) {
-    console.error("Ошибка получения количества клиентов:", error);
+    console.error("Ошибка получения клиентов:", error);
     return NextResponse.json({ message: "Ошибка сервера" }, { status: 500 });
   }
 }

@@ -1,17 +1,18 @@
 import { PrismaClient } from "@prisma/client";
+import { v4 as uuidv4 } from "uuid"; // Импорт генератора UUID
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // Простой пароль без хеширования
-  const password = "1234";
-
   await prisma.admin.create({
     data: {
+      id: 1,
       login: "admin",
-      password: password, // Храним пароль в открытом виде
-    },
+      password: "1234"
+    }
   });
+  
+  
 
   console.log("Админ создан!");
 }

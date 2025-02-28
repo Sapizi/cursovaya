@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import Header from "@/components/Header/Header";
 import styles from "./administration.module.css";
 import WeatherWidget from "@/components/WeatherWidget/WeatherWidget";
@@ -23,7 +23,7 @@ export default function Administration() {
       try {
         const res = await fetch("/api/clients");
         const data = await res.json();
-        setClientCount(data.count);
+        setClientCount(data.count); // Общее число клиентов
       } catch (error) {
         console.error("Ошибка загрузки данных:", error);
       }
@@ -33,7 +33,7 @@ export default function Administration() {
       try {
         const res = await fetch("/api/classes");
         const data = await res.json();
-        setClasses(data);
+        setClasses(data); // Список занятий
       } catch (error) {
         console.error("Ошибка загрузки занятий:", error);
       }
@@ -43,19 +43,12 @@ export default function Administration() {
     fetchClasses();
 
     const interval = setInterval(() => {
-      const date = new Date();
-      setCurrentDate(date.toLocaleString());
+      setCurrentDate(new Date().toLocaleString());
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const handleAddClient = () => {
-    router.push("/pages/add");
-  };
-  const handleAddChalange = () => {
-    router.push("/pages/addChalange");
-  }
   return (
     <>
       <Header />
@@ -63,15 +56,18 @@ export default function Administration() {
         <h1 className={styles.title}>Главная</h1>
         <div className={styles.wrapper}>
           <div className={styles.cards}>
+            {/* Левый блок с количеством клиентов */}
             <div className={styles.left}>
               <span className={styles.titleCard}>
                 {clientCount !== null ? clientCount : "Загрузка..."}
               </span>
-              <p className={styles.desc}>количество клиентов</p>
-              <button className={styles.button} onClick={handleAddClient}>
-                Добавить
+              <p className={styles.desc}>Общее количество клиентов</p>
+              <button className={styles.button} onClick={() => router.push("/pages/add")}>
+                Добавить клиента
               </button>
             </div>
+
+            {/* Центральный блок с занятиями */}
             <div className={styles.center}>
               <span className={styles.centerTitle}>Сегодняшняя дата</span>
               <p className={styles.date}>{currentDate}</p>
@@ -88,11 +84,16 @@ export default function Administration() {
                 )}
               </ul>
               <p className={styles.centerTitle2}>Погода сегодня:</p>
-              <WeatherWidget/>
+              <WeatherWidget />
             </div>
+
+            {/* Правый блок с кнопками */}
             <div className={styles.right}>
-            <button className={styles.button} onClick={handleAddChalange}>
+              <button className={styles.button} onClick={() => router.push("/pages/addChalange")}>
                 Добавить занятие
+              </button>
+              <button className={styles.button} onClick={() => router.push("/pages/addTrainer")}>
+                Добавить тренера
               </button>
             </div>
           </div>
