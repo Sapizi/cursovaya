@@ -5,15 +5,12 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
-
 model Admin {
   id        Int  @id 
   login     String  @unique
   password  String
   createdAt DateTime @default(now())
 }
-
-
 model Trainer {
   id             String  @id @default(uuid())
   name           String
@@ -22,8 +19,6 @@ model Trainer {
 
   classes        Class[]
 }
-
-
 model Client {
   id           String   @id @default(uuid()) 
   name         String   
@@ -33,7 +28,6 @@ model Client {
 
   classParticipants ClassParticipants[]
 }
-
 model Class {
   id          String   @id @default(uuid())
   startTime   DateTime
@@ -43,13 +37,10 @@ model Class {
 
   classParticipants ClassParticipants[]
 }
-
 model ClassParticipants {
   classId  String
   clientId String
-
   class    Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
   client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
-
   @@id([classId, clientId])
 }

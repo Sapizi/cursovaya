@@ -4,51 +4,43 @@ import { useRouter } from "next/navigation";
 import Header from "@/components/Header/Header";
 import styles from "./administration.module.css";
 import WeatherWidget from "@/components/WeatherWidget/WeatherWidget";
-
 type ClassData = {
   id: string;
   startTime: string;
   trainer: string;
   participants: number;
 };
-
 export default function Administration() {
   const [clientCount, setClientCount] = useState<number | null>(null);
   const [currentDate, setCurrentDate] = useState<string>("");
   const [classes, setClasses] = useState<ClassData[]>([]);
   const router = useRouter();
-
   useEffect(() => {
     const fetchClientCount = async () => {
       try {
         const res = await fetch("/api/clients");
         const data = await res.json();
-        setClientCount(data.count); // Общее число клиентов
+        setClientCount(data.count); 
       } catch (error) {
         console.error("Ошибка загрузки данных:", error);
       }
     };
-
     const fetchClasses = async () => {
       try {
         const res = await fetch("/api/classes");
         const data = await res.json();
-        setClasses(data); // Список занятий
+        setClasses(data); 
       } catch (error) {
         console.error("Ошибка загрузки занятий:", error);
       }
     };
-
     fetchClientCount();
     fetchClasses();
-
     const interval = setInterval(() => {
       setCurrentDate(new Date().toLocaleString());
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
-
   return (
     <>
       <Header />
@@ -56,7 +48,6 @@ export default function Administration() {
         <h1 className={styles.title}>Главная</h1>
         <div className={styles.wrapper}>
           <div className={styles.cards}>
-            {/* Левый блок с количеством клиентов */}
             <div className={styles.left}>
               <span className={styles.titleCard}>
                 {clientCount !== null ? clientCount : "Загрузка..."}
@@ -66,8 +57,6 @@ export default function Administration() {
                 Добавить клиента
               </button>
             </div>
-
-            {/* Центральный блок с занятиями */}
             <div className={styles.center}>
               <span className={styles.centerTitle}>Сегодняшняя дата</span>
               <p className={styles.date}>{currentDate}</p>
@@ -86,8 +75,6 @@ export default function Administration() {
               <p className={styles.centerTitle2}>Погода сегодня:</p>
               <WeatherWidget />
             </div>
-
-            {/* Правый блок с кнопками */}
             <div className={styles.right}>
               <button className={styles.button} onClick={() => router.push("/pages/addChalange")}>
                 Добавить занятие
@@ -95,6 +82,7 @@ export default function Administration() {
               <button className={styles.button} onClick={() => router.push("/pages/addTrainer")}>
                 Добавить тренера
               </button>
+              <button className={styles.button} onClick={() => router.push("/pages/clientsList")}>Список клиентов</button>
             </div>
           </div>
         </div>

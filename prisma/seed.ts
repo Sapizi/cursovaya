@@ -1,8 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { v4 as uuidv4 } from "uuid"; // Импорт генератора UUID
-
+import { v4 as uuidv4 } from "uuid";
 const prisma = new PrismaClient();
-
 async function main() {
   await prisma.admin.create({
     data: {
@@ -11,12 +9,8 @@ async function main() {
       password: "1234"
     }
   });
-  
-  
-
   console.log("Админ создан!");
 }
-
 main()
   .catch((e) => console.error(e))
   .finally(async () => await prisma.$disconnect());

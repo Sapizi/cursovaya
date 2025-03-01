@@ -5,6 +5,7 @@
     font-size: 36px;
     margin-top: 87px;
     margin-bottom: 27px;
+    margin-left: 40px;
 }
 .button{
     background-color: #E97C00;
@@ -19,12 +20,11 @@
 .left{
     width: 460px;
     height: 626px;
-    border: 2px solid #333;
-    border-radius: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    border-radius: 10px;
+    border: 2px solid black;
 }
 .wrapper{
     margin-left: 250px;
@@ -59,5 +59,5 @@
     margin-left: 85px;
     display: flex;
     flex-direction: column;
-    gap: 100px;
+    gap: 131.5px;
 }

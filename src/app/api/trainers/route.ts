@@ -1,16 +1,14 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma'; 
-
 export async function GET() {
   try {
-    const trainers = await prisma.trainer.findMany(); // Получаем всех тренеров из БД
+    const trainers = await prisma.trainer.findMany(); 
     return NextResponse.json(trainers);
   } catch (error) {
     console.error("Ошибка загрузки тренеров:", error);
     return NextResponse.json({ error: "Ошибка загрузки тренеров" }, { status: 500 });
   }
 }
-
 export async function POST(request: Request) {
   try {
     const { name, specialization } = await request.json();

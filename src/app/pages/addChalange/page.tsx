@@ -2,35 +2,29 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Header from "@/components/Header/Header";
-
 interface Trainer {
   id: string;
   name: string;
 }
-
 interface Client {
   id: string;
   name: string;
 }
-
 interface ClassFormData {
   startTime: string;
   trainerId: string;
   participants: string[];
 }
-
 export default function AddClass() {
   const { register, handleSubmit, setValue, watch } = useForm<ClassFormData>({
     defaultValues: {
       participants: [],
     },
   });
-
   const [trainers, setTrainers] = useState<Trainer[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [notification, setNotification] = useState<string | null>(null);
   const participants = watch("participants");
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,13 +39,10 @@ export default function AddClass() {
         console.error("Ошибка загрузки данных:", error);
       }
     };
-
     fetchData();
   }, []);
-
   const onSubmit = async (data: ClassFormData) => {
     console.log("Отправка данных:", data);
-
     const response = await fetch("/api/classes", {
       method: "POST",
       headers: {
@@ -59,16 +50,13 @@ export default function AddClass() {
       },
       body: JSON.stringify(data),
     });
-
     if (response.ok) {
       setNotification("Занятие успешно добавлено!");
     } else {
       setNotification("Ошибка при добавлении занятия.");
     }
-
     setTimeout(() => setNotification(null), 3000);
   };
-
   const handleCheckboxChange = (clientId: string, checked: boolean) => {
     const updatedParticipants = checked
       ? [...participants, clientId]
@@ -76,21 +64,17 @@ export default function AddClass() {
 
     setValue("participants", updatedParticipants);
   };
-
   return (
     <div>
       <Header />
       <h1>Добавление занятия</h1>
-      
       {notification && <div className="notification">{notification}</div>}
-
       <form onSubmit={handleSubmit(onSubmit)}>
         <label>Время начала:</label>
         <input
           type="datetime-local"
           {...register("startTime", { required: true })}
         />
-
         <label>Тренер:</label>
         <select {...register("trainerId", { required: true })}>
           <option value="">Выберите тренера</option>
@@ -100,7 +84,6 @@ export default function AddClass() {
             </option>
           ))}
         </select>
-
         <label>Участники:</label>
         <div>
           {clients.length > 0 ? (
@@ -123,10 +106,8 @@ export default function AddClass() {
             <p>Нет доступных клиентов</p>
           )}
         </div>
-
         <button type="submit">Добавить занятие</button>
       </form>
-
       <style jsx>{`
         .notification {
           margin: 10px 0;

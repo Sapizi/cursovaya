@@ -18,7 +18,6 @@ export default function AddClient() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-
       if (res.ok) {
         alert("Клиент добавлен!");
         router.push("/pages/administration");
@@ -38,7 +37,6 @@ export default function AddClient() {
         <div className={styles.all}>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.forma}>
             <div>
-
               <input className={styles.input} placeholder="Имя"
                 type="text"
                 {...register("name", { required: "Введите имя" })}
@@ -49,7 +47,6 @@ export default function AddClient() {
               <input className={styles.input} placeholder="Возраст"
                 type="number"
                 {...register("age", { required: "Введите возраст", min: 1 })}
-
               />
               {errors.age && <span>{errors.age.message}</span>}
             </div>

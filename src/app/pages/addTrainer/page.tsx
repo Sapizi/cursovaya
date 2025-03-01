@@ -1,25 +1,20 @@
-'use client';
-
+'use client'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Header from '../../../components/Header/Header';
-
 interface TrainerFormData {
   name: string;
   specialization: string;
 }
-
 export default function AddTrainer() {
   const { register, handleSubmit, formState: { errors } } = useForm<TrainerFormData>();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
-
   const onSubmit = async (data: TrainerFormData) => {
     setLoading(true);
     setError('');
     setSuccess('');
-
     try {
       const response = await fetch('/api/trainers', {
         method: 'POST',
@@ -28,12 +23,9 @@ export default function AddTrainer() {
         },
         body: JSON.stringify(data),
       });
-      
-
       if (!response.ok) {
         throw new Error('Не удалось добавить тренера');
       }
-
       const newTrainer = await response.json();
       setSuccess(`Тренер ${newTrainer.name} успешно добавлен!`);
     } catch (err) {
@@ -46,7 +38,6 @@ export default function AddTrainer() {
       setLoading(false);
     }
   };
-
   return (
     <div>
       <Header />
@@ -61,7 +52,6 @@ export default function AddTrainer() {
           />
           {errors.name && <p style={{ color: 'red' }}>{errors.name.message}</p>}
         </div>
-
         <div>
           <label htmlFor="specialization">Специализация:</label>
           <input
@@ -71,12 +61,10 @@ export default function AddTrainer() {
           />
           {errors.specialization && <p style={{ color: 'red' }}>{errors.specialization.message}</p>}
         </div>
-
         <button type="submit" disabled={loading}>
           {loading ? 'Загружается...' : 'Добавить тренера'}
         </button>
       </form>
-
       {success && <p style={{ color: 'green' }}>{success}</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
