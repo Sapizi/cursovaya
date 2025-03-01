@@ -1,14 +1,41 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
+
 export async function GET() {
   try {
-    const clients = await prisma.client.findMany();
-    return NextResponse.json({ count: clients.length, clients }); 
+    const count = await prisma.client.count();
+    const clients = await prisma.client.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true
+      }
+    });
+    
+    return new NextResponse(JSON.stringify({
+      success: true,
+      count,
+      clients
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   } catch (error) {
-    console.error("Ошибка получения клиентов:", error);
-    return NextResponse.json({ message: "Ошибка сервера" }, { status: 500 });
+    console.error("Error in clients route:", error);
+    return new NextResponse(JSON.stringify({
+      success: false,
+      error: 'Internal Server Error'
+    }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   }
 }
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();

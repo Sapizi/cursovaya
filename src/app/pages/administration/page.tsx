@@ -4,43 +4,68 @@ import { useRouter } from "next/navigation";
 import Header from "@/components/Header/Header";
 import styles from "./administration.module.css";
 import WeatherWidget from "@/components/WeatherWidget/WeatherWidget";
+
 type ClassData = {
   id: string;
   startTime: string;
   trainer: string;
   participants: number;
 };
+
 export default function Administration() {
-  const [clientCount, setClientCount] = useState<number | null>(null);
+  const [clientCount, setClientCount] = useState(0);
   const [currentDate, setCurrentDate] = useState<string>("");
   const [classes, setClasses] = useState<ClassData[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+
   useEffect(() => {
-    const fetchClientCount = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch("/api/clients");
-        const data = await res.json();
-        setClientCount(data.count); 
+        setLoading(true);
+        const response = await fetch('/api/clients');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        if (data.success) {
+          setClientCount(data.count);
+        } else {
+          throw new Error(data.error || 'Unknown error occurred');
+        }
+
+        // Загрузка данных о занятиях
+        const classRes = await fetch("/api/classes");
+        if (!classRes.ok) throw new Error('Failed to fetch classes');
+        const classData = await classRes.json();
+        setClasses(classData);
       } catch (error) {
-        console.error("Ошибка загрузки данных:", error);
+        console.error("Error fetching data:", error);
+        setError(error instanceof Error ? error.message : 'An error occurred');
+      } finally {
+        setLoading(false);
       }
     };
-    const fetchClasses = async () => {
-      try {
-        const res = await fetch("/api/classes");
-        const data = await res.json();
-        setClasses(data); 
-      } catch (error) {
-        console.error("Ошибка загрузки занятий:", error);
-      }
-    };
-    fetchClientCount();
-    fetchClasses();
+
+    fetchData();
+
     const interval = setInterval(() => {
       setCurrentDate(new Date().toLocaleString());
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">Error: {error}</div>;
+  }
+
   return (
     <>
       <Header />
@@ -50,7 +75,7 @@ export default function Administration() {
           <div className={styles.cards}>
             <div className={styles.left}>
               <span className={styles.titleCard}>
-                {clientCount !== null ? clientCount : "Загрузка..."}
+                {clientCount}
               </span>
               <p className={styles.desc}>Общее количество клиентов</p>
               <button className={styles.button} onClick={() => router.push("/pages/add")}>

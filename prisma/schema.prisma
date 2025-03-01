@@ -6,41 +6,57 @@ generator client {
   provider = "prisma-client-js"
 }
 model Admin {
-  id        Int  @id 
-  login     String  @unique
+  id        Int      @id 
+  login     String   @unique
   password  String
   createdAt DateTime @default(now())
 }
 model Trainer {
-  id             String  @id @default(uuid())
+  id             String    @id @default(uuid())
   name           String
   specialization String
-  createdAt      DateTime @default(now())
-
+  createdAt      DateTime  @default(now())
+  email          String    @unique
+  phone          String?
+  password       String
+  clients        Client[]
+  programs       Program[]
   classes        Class[]
 }
 model Client {
-  id           String   @id @default(uuid()) 
-  name         String   
-  age          Int      
-  subscription String   
-  createdAt    DateTime @default(now())
-
+  id                Int                 @id @default(autoincrement())
+  name              String
+  email             String              @unique
+  phone             String?
+  password          String
+  height            Float?
+  weight            Float?
+  goal              String?
+  trainer           Trainer?            @relation(fields: [trainerId], references: [id])
+  trainerId         String?
+  programs          Program[]
   classParticipants ClassParticipants[]
 }
 model Class {
-  id          String   @id @default(uuid())
-  startTime   DateTime
-  trainerId   String
-  trainer     Trainer  @relation(fields: [trainerId], references: [id])
-  createdAt   DateTime @default(now())
-
+  id                Int                 @id @default(autoincrement())
+  name              String
+  trainer           Trainer             @relation(fields: [trainerId], references: [id])
+  trainerId         String
+  createdAt         DateTime            @default(now())
   classParticipants ClassParticipants[]
 }
 model ClassParticipants {
-  classId  String
-  clientId String
+  classId  Int
+  clientId Int
   class    Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
   client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
   @@id([classId, clientId])
+}
+model Program {
+  id        Int      @id @default(autoincrement())
+  name      String
+  client    Client   @relation(fields: [clientId], references: [id])
+  clientId  Int
+  trainer   Trainer  @relation(fields: [trainerId], references: [id])
+  trainerId String
 }

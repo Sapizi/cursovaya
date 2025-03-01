@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Header from "@/components/Header/Header";
+import styles from "./page.module.css";
 interface Trainer {
   id: string;
   name: string;
@@ -34,7 +35,10 @@ export default function AddClass() {
 
         const clientsRes = await fetch("/api/clients");
         const clientsData = await clientsRes.json();
-        setClients(Array.isArray(clientsData) ? clientsData : []);
+        const sortedClients = Array.isArray(clientsData.clients) 
+          ? [...clientsData.clients].sort((a, b) => a.name.localeCompare(b.name))
+          : [];
+        setClients(sortedClients);
       } catch (error) {
         console.error("Ошибка загрузки данных:", error);
       }
@@ -67,15 +71,15 @@ export default function AddClass() {
   return (
     <div>
       <Header />
-      <h1>Добавление занятия</h1>
+      <h1 className={styles.title}>Добавление занятия</h1>
       {notification && <div className="notification">{notification}</div>}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label>Время начала:</label>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <label className={styles.text}>Время начала:</label>
         <input
           type="datetime-local"
           {...register("startTime", { required: true })}
         />
-        <label>Тренер:</label>
+        <label className={styles.text}>Тренер:</label>
         <select {...register("trainerId", { required: true })}>
           <option value="">Выберите тренера</option>
           {trainers.map((trainer) => (
@@ -84,8 +88,8 @@ export default function AddClass() {
             </option>
           ))}
         </select>
-        <label>Участники:</label>
-        <div>
+        <label className={styles.text}>Участники:</label>
+        <div className={styles.clientsList}>
           {clients.length > 0 ? (
             clients.map((client) => (
               <div key={client.id}>
@@ -106,7 +110,7 @@ export default function AddClass() {
             <p>Нет доступных клиентов</p>
           )}
         </div>
-        <button type="submit">Добавить занятие</button>
+        <button type="submit" className={styles.button}>Добавить занятие</button>
       </form>
       <style jsx>{`
         .notification {

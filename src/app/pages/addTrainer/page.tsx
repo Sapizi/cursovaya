@@ -2,15 +2,19 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Header from '../../../components/Header/Header';
+import styles from './page.module.css';
+
 interface TrainerFormData {
   name: string;
   specialization: string;
 }
+
 export default function AddTrainer() {
   const { register, handleSubmit, formState: { errors } } = useForm<TrainerFormData>();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
+
   const onSubmit = async (data: TrainerFormData) => {
     setLoading(true);
     setError('');
@@ -38,35 +42,38 @@ export default function AddTrainer() {
       setLoading(false);
     }
   };
+
   return (
     <div>
       <Header />
-      <h1>Добавить тренера</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="name">Имя:</label>
+      <h1 className={styles.title}>Добавить тренера</h1>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label htmlFor="name" className={styles.text}>Имя:</label>
           <input
             type="text"
             id="name"
+            className={styles.input}
             {...register('name', { required: 'Имя обязательно' })}
           />
-          {errors.name && <p style={{ color: 'red' }}>{errors.name.message}</p>}
+          {errors.name && <p className={styles.error}>{errors.name.message}</p>}
         </div>
-        <div>
-          <label htmlFor="specialization">Специализация:</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="specialization" className={styles.text}>Специализация:</label>
           <input
             type="text"
             id="specialization"
+            className={styles.input}
             {...register('specialization', { required: 'Специализация обязательна' })}
           />
-          {errors.specialization && <p style={{ color: 'red' }}>{errors.specialization.message}</p>}
+          {errors.specialization && <p className={styles.error}>{errors.specialization.message}</p>}
         </div>
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className={styles.button}>
           {loading ? 'Загружается...' : 'Добавить тренера'}
         </button>
+        {success && <p className={styles.success}>{success}</p>}
+        {error && <p className={styles.error}>{error}</p>}
       </form>
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 }

@@ -1,0 +1,74 @@
+.title{
+    margin-left: 250px;    
+    margin-top: 50px;
+    margin-bottom: 20px;
+    font-size: 52px;
+}
+.form{
+    height: 600px;
+    width: 500px;
+    border: 2px solid black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin: 0 auto;
+}
+
+.text{
+    font-size: 24px;
+}
+.button{
+    height: 70px;
+    width: 250px;
+    background-color: #E97C00;
+    color: white;
+    font-size: 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+}
+
+.clientsList {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 80%;
+    /* Стили для скроллбара */
+    scrollbar-width: thin;
+    scrollbar-color: #E97C00 #f0f0f0;
+}
+
+.clientsList::-webkit-scrollbar {
+    width: 8px;
+}
+
+.clientsList::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+.clientsList::-webkit-scrollbar-thumb {
+    background-color: #E97C00;
+    border-radius: 4px;
+}
+
+.clientsList > div {
+    margin: 8px 0;
+    padding: 5px;
+}
+
+.clientsList label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.clientsList input[type="checkbox"] {
+    margin-right: 8px;
+}
+
